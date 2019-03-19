@@ -14,8 +14,8 @@ cv::Point2i FindBoundary(cv::Mat src, double angle)
     cv::Point2f newVertices[4];
     for (int i = 0; i < 4; i++)
     {
-        newVertices[i].x = (vertices[i].x + vertices[i].y * sin(angle) ) / cos(angle);
-        newVertices[i].y = ( vertices[i].x - vertices[i].y ) / (2 * sin(angle));
+        newVertices[i].x = ( vertices[i].x*cos(angle) - vertices[i].y*sin(angle) );
+        newVertices[i].y = ( vertices[i].x*sin(angle) + vertices[i].y*cos(angle) );
     }
 
     float min_x = std::min(newVertices[0].x, std::min(newVertices[1].x, std::min(newVertices[2].x, newVertices[3].x)));
@@ -45,8 +45,8 @@ void NearestNeighbor(cv::Mat src, double angle, cv::Point2i boundary, std::strin
     cv::Mat output = cv::Mat(newHeight, newWidth, src.type());
 
     int paddRow = -newCenterRow * cos(angle) + newCenterCol * sin(angle) + oldCenterRow;
-    int paddCol = -newCenterRow * cos(angle) - newCenterCol * sin(angle) + oldCenterCol;
-
+	int paddCol = -newCenterRow * sin(angle) - newCenterCol * cos(angle) + oldCenterCol;
+    
     for (int row = 0; row < newHeight; row++)
     {
         for (int col = 0; col < newWidth; col++)
@@ -85,7 +85,7 @@ void Bilinear(cv::Mat src, double angle, cv::Point2i boundary, std::string name)
     cv::Mat output = cv::Mat(newHeight, newWidth, src.type());
 
     int paddRow = -newCenterRow * cos(angle) + newCenterCol * sin(angle) + oldCenterRow;
-    int paddCol = -newCenterRow * cos(angle) - newCenterCol * sin(angle) + oldCenterCol;
+	int paddCol = -newCenterRow * sin(angle) - newCenterCol * cos(angle) + oldCenterCol;
 
     for (int row = 0; row < newHeight; row++)
     {
@@ -181,7 +181,7 @@ void Bicubic(cv::Mat src, double angle, cv::Point2i boundary, std::string name)
     cv::Mat output = cv::Mat(newHeight, newWidth, src.type());
 
     int paddRow = -newCenterRow * cos(angle) + newCenterCol * sin(angle) + oldCenterRow;
-    int paddCol = -newCenterRow * cos(angle) - newCenterCol * sin(angle) + oldCenterCol;
+	int paddCol = -newCenterRow * sin(angle) - newCenterCol * cos(angle) + oldCenterCol;
 
     for (int row = 0; row < newHeight; row++)
     {
